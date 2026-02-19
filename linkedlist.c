@@ -1,42 +1,77 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+//Structs
 typedef struct Node {
-    int data; //Actual data on the node
-    struct Node *next; //Pointer to next node on the list
+    int data; 
+    struct Node *next; 
 } Node;
 
 typedef struct {
-    Node *first; //Pointer to the start of the list
-    Node *last;  //Pointer to the end of the list
+    Node *first; 
+    Node *last;  
 } List;
 
 //Declare functions
+List *createList();
 void add(List *L, int value);
+void reverse(List *L);
 int find_max(List *L);
 
 int main(){
     //Variables
     int listSize = 0;
     int element = 0;
-    //Initialize the Linked List to null
-    List *L = (List*)malloc(sizeof(List));
-    L->first=NULL;
-    L->last=NULL;
-    //Ask user for size of List
+
+    //Initialize
+    List * L=createList();
+
+    //User input
     printf("Enter the number of integers: ");
     scanf("%d" ,&listSize);
     printf("Enter %d integers:\n", listSize);
-    //Loop to get all elements
     for(int i=0;i<listSize;i++){
-        scanf("%d", &element);
-        add(L, element);
+        scanf("%d", &element);add(L, element);
     }
+
+    //Print original
+    printf("\nOriginal list:");
+    Node* current = L->first;
+    int stack[200];
+    int top=-1;
+
+    while(current != NULL){
+        stack[++top] = current->data;
+        current=current->next;
+    }
+    while(top>=0){
+        if(top==0){printf(" %d\n", stack[top--]);}
+        else{printf(" %d ->",stack[top--]);}
+    }
+
+    //Reverse
+    reverse(L);
+
+    //Print reverse
+    printf("Reversed list:");
+    current=L->first;
+    top=-1;
+
+    while(current != NULL){
+        stack[++top] = current->data;
+        current=current->next;
+    }
+    while(top>=0){
+        if(top==0){printf(" %d\n", stack[top--]);}
+        else{printf(" %d ->",stack[top--]);}
+    }
+
+    //Print max
     int max = find_max(L);
-    printf("\nThe maximum value is: %d\n", max);
+    printf("The maximum value is: %d\n", max);
 
     //Free allocated memory
-    Node* current = L->first;
+    current = L->first;
     Node* next;
     while (current != NULL)
     {
@@ -48,8 +83,16 @@ int main(){
     return 0;
 }
 
+//Create/Initialize List
+List *createList(){
+    List *L = (List*)malloc(sizeof(List));
+    L->first=NULL;
+    L->last=NULL;
+    return L;
+}
+
+//Add new element to List
 void add(List *L, int value){
-    //Allocate space for new node and change the next pointer to the new element
     Node* pNew;
     pNew = (Node*)malloc(sizeof(Node));
     pNew->data = value;
@@ -57,8 +100,28 @@ void add(List *L, int value){
     L->first = pNew;
 }
 
+//Reverse list
+void reverse(List *L){
+    //Check if empty or one element
+    if(L->first==NULL || L->first==L->last){return;}
+    //Reverse links
+    Node* current = L->first;
+    Node* previous = NULL;
+    Node* next = NULL;
+    while(current!=NULL){
+        next=current->next;
+        current->next=previous;
+        previous=current;
+        current=next;
+    }
+    //Change head<>tail
+    next=L->first;
+    L->first=previous;
+    L->last=next;
+}
+
+//Find max value
 int find_max(List *L){
-    //Iterate through the list to find largest int, then return it
     int max = 0;
     Node* current = L->first;
     while (current != L->last){
