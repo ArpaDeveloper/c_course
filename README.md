@@ -1,6 +1,6 @@
 # My code dump with C-language
 Different codes that I have done using C-language. 
-## Algorithms
+## [Algorithms](./algorithms)
 ### Bubble sort
 Implementation of bubble sort algorithm. Bubble sort algorithm works by repeatedly steps through the input list element by element, 
 comparing the current element with the one after it, swapping their values if needed. 
